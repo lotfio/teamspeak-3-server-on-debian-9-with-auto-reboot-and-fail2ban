@@ -1,23 +1,23 @@
 # Create a ts3 user 
  
-```python
+```php
   sudo adduser --disabled-login ts3
 ```
  
-# Get the latest TeamSpeak 3 server files for 64-bit Linux.
+### Get the latest TeamSpeak 3 server files for 64-bit Linux.
 
-```python
+```php
   wget http://dl.4players.de/ts/releases/3.1.1/teamspeak3-server_linux_amd64-3.2.3.tar.bz2
 ```
   
- # Extract the archive.
-  ```python
+ ### Extract the archive.
+  ```php
     cd /opt
     sudo tar -xvf teamspeak3-server_linux_amd64-3.1.1.tar.bz2
   ```
   
- # In the extracted folder, we have the conditions for using Teamspeak servers. It will be necessary to accept them by creating a file before starting the server.
-  ```python
+### In the extracted folder, we have the conditions for using Teamspeak servers. It will be necessary to accept them by creating a file before starting the server.
+  ```php
       cd teamspeak3-server_linux_amd64
       #Reading the Terms
       nano LICENSE
@@ -25,9 +25,9 @@
       touch .ts3server_license_accepted
   ```
 
-# We will now start our server for the first time. At the first start of the server, we will have access to very important information, which will allow you to administer your server. It will therefore be necessary to note the connection information of the Admin Server and the Token.
-```
-    sh ts3server_startscript.sh start
+### We will now start our server for the first time. At the first start of the server, we will have access to very important information, which will allow you to administer your server. It will therefore be necessary to note the connection information of the Admin Server and the Token.
+```php
+    sudo sh ts3server_startscript.sh start
 
     ------------------------------------------------------------------
                           I M P O R T A N T                           
@@ -47,12 +47,12 @@
     ------------------------------------------------------------------
  ```
 #Make the TeamSpeak 3 server start on boot. Use your favorite editor to make a new file called teamspeak in /etc/init.d/.
-```python
-  nano /etc/init.d/teamspeak
+```php
+  nano /etc/init.d/ts3
 ```
 # Populate it with this content.
 
-```
+```php
   #!/bin/sh
   ### BEGIN INIT INFO
   # Provides:         teamspeak
@@ -66,8 +66,8 @@
   ######################################
   # Customize values for your needs: "User"; "DIR"
 
-  USER="teamspeak"
-  DIR="/opt/teamspeak3/server"
+  USER="ts3"
+  DIR="/opt/teamspeak3-server_linux_amd64"
 
   ###### Teamspeak 3 server start/stop script ######
 
@@ -92,9 +92,15 @@
   exit 0
  ```
  
- # Once you are done, save the file and close the editor.
- # Make it executable and add it to the service.
- ```python
-  chmod +x /etc/init.d/teamspeak
+ ### Once you are done, save the file and close the editor.
+ ### Make it executable and add it to the service.
+ ```php
+  chmod +x /etc/init.d/ts3
   update-rc.d teamspeak defaults
  ```
+ ### Make sure to change teamspeak folder ownership to ts3 user 
+ ```php
+ sudo chown -R ts3:ts3 /opt/teamspeak3-server_linux_amd64
+ ```
+ 
+ # Fail2ban configuration
