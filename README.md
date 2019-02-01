@@ -21,9 +21,9 @@
   ```php
       cd teamspeak3-server_linux_amd64
       #Reading the Terms
-      nano LICENSE
+      sudo nano LICENSE
       # Creation of the acceptance file
-      touch .ts3server_license_accepted
+      sudo touch .ts3server_license_accepted
   ```
 
 ### We will now start our server for the first time. At the first start of the server, we will have access to very important information, which will allow you to administer your server. It will therefore be necessary to note the connection information of the Admin Server and the Token.
@@ -49,7 +49,7 @@
  ```
 ## Make the TeamSpeak 3 server start on boot. Use your favorite editor to make a new file called teamspeak in /etc/init.d/.
 ```php
-  nano /etc/init.d/ts3
+  sudo nano /etc/init.d/ts3
 ```
 ## Populate it with this content.
 
@@ -96,8 +96,8 @@
  ### Once you are done, save the file and close the editor.
  ### Make it executable and add it to the service.
  ```php
-  chmod +x /etc/init.d/ts3
-  update-rc.d ts3 defaults
+  sudo chmod +x /etc/init.d/ts3
+  sudo update-rc.d ts3 defaults
  ```
  ### Make sure to change teamspeak folder ownership to ts3 user 
  ```php
