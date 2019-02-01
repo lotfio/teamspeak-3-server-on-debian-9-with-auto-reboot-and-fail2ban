@@ -7,12 +7,13 @@
 ### Get the latest TeamSpeak 3 server files for 64-bit Linux.
 
 ```php
+  // lets cd to the location where we want to install our ts server
+  cd /opt
   wget http://dl.4players.de/ts/releases/3.1.1/teamspeak3-server_linux_amd64-3.2.3.tar.bz2
 ```
   
  ### Extract the archive.
   ```php
-    cd /opt
     sudo tar -xvf teamspeak3-server_linux_amd64-3.1.1.tar.bz2
   ```
   
@@ -46,11 +47,11 @@
            token=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     ------------------------------------------------------------------
  ```
-#Make the TeamSpeak 3 server start on boot. Use your favorite editor to make a new file called teamspeak in /etc/init.d/.
+## Make the TeamSpeak 3 server start on boot. Use your favorite editor to make a new file called teamspeak in /etc/init.d/.
 ```php
   nano /etc/init.d/ts3
 ```
-# Populate it with this content.
+## Populate it with this content.
 
 ```php
   #!/bin/sh
@@ -96,7 +97,7 @@
  ### Make it executable and add it to the service.
  ```php
   chmod +x /etc/init.d/ts3
-  update-rc.d teamspeak defaults
+  update-rc.d ts3 defaults
  ```
  ### Make sure to change teamspeak folder ownership to ts3 user 
  ```php
@@ -104,3 +105,41 @@
  ```
  
  # Fail2ban configuration
+  *create a teamspeak.conf filter on your /etc/fail2ban/filter.d*
+  ```php
+    sudo nano /etc/fail2ban/filter.d/teamspeak.conf
+    
+    // populate it with this content
+    [INCLUDES]
+    before = common.conf
+    [Definition]
+    failregex = ^(.*)query from [0-9]{1,} :[0-9]{1,5} attempted to login with account "(.*)" and failed!$
+    ignoreregex =
+  ```
+  *Make sure to enable all logs on your teamspeak server configuration*
+  
+  ## Now add your filter to the jail.local fail
+
+  ```php
+     sudo nano /etc/fail2ban/jail.local
+     
+     add this rules to your file
+     
+     [teamspeak]
+     enabled  = true
+     port     = 9987,10011,30033
+     filter   = teamspeak
+     logpath  = /opt/ts3/teamspeak3-server_linux_amd64/logs/ts3server_*.log
+     maxretry = 3
+     bantime  = 86400
+     findtime = 7800
+  ```
+  ## Now check if our teamspeak filter is working by running the following commands:
+  ```php
+   // this command will list all the enabled filters
+   sudo fail2ban-client status 
+   
+   // this command will load the status of teamspeak filter and additional details
+   sudo fail2ban-client status teamspeak
+  ```
+
